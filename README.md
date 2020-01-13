@@ -20,6 +20,6 @@ Change the following parts of code to suit your need:
 - `max_page`
 - `SoupStrainer` Filters
 - util functions such as `page2url, get*, fillTable`
-- other functions, e.g. to GET other pages beforehand
+- other functions, e.g. to GET other pages beforehand (optional)
 
 For more details, check out the given examples `Newspaper-comm.py` and `Newspaper-soci.py`.
