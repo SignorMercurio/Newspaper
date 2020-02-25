@@ -2,6 +2,8 @@
 
 Newspaper is a simple framework for crawling the websites of different departments in my school. Its main functionality is to generate Excel documents with statistical charts based on hits on the news page, revealing how the website updates the relating news.
 
+**It's still under development** because structures of these websites differ a lot.
+
 ## Requirements
 
 - `bs4`
