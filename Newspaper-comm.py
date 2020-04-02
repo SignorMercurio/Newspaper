@@ -1,3 +1,4 @@
+
 from bs4 import BeautifulSoup, SoupStrainer
 import requests
 import re
@@ -11,6 +12,7 @@ headers = {
 max_page = 7
 
 # for pandas
+titles = []
 time = []
 visit = []
 
@@ -24,6 +26,9 @@ def page2url(i):
 def getNewsList(soup):
   return soup('a', href=re.compile(r'.*htmlId=\d'))
 
+def getTitle(news):
+  return news.select('.cur_news')[0].string
+
 def getDate(news):
   return news.select('.newsdate')[0].string
 
@@ -33,30 +38,32 @@ def getArticleURL(news):
 def getVisitCountURL(article_url):
   return base_url + article_url
 
-def fillTable(soup, date):
-  global time, visit
+def fillTable(soup, title, date):
+  global titles, time, visit
   s = soup.find('div').string[5:]
   print(s)
   visit.append(int(s))
+  titles.append(title)
   time.append(date[10:])
 
 def iterNews(news_list, r):
   date_regex = r'.*2019-.*'
   for news in news_list:
+    title = getTitle(news)
     date = getDate(news)
     if re.match(date_regex, date):
       article_url = getArticleURL(news)
       if not article_url.startswith('http'):
         soup = BeautifulSoup(r.get(getVisitCountURL(article_url),headers=headers).text,'lxml', parse_only=only_detail)
         try:
-          fillTable(soup, date)
+          fillTable(soup, title, date)
         except:
           pass
 
 def export2Excel():
   import pandas as pd
   writer = pd.ExcelWriter('output.xlsx')
-  df = pd.DataFrame(data={'time':time, 'visit':visit})
+  df = pd.DataFrame(data={'title':titles, 'time':time, 'visit':visit})
   df.to_excel(writer,'Sheet1', index=False)
   writer.save()
 
